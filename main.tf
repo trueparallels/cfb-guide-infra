@@ -77,3 +77,17 @@ resource "aws_dynamodb_table" "cfb-guide-prod-games" {
     type = "S"
   }
 }
+
+resource "aws_s3_bucket" "cfb-guide-prod-s3-bucket" {
+  bucket = "cfb-guide-prod"
+  acl = "public-read"
+
+  website {
+    index_document = "index.html"
+  }
+
+  tags = {
+    Name = "cfb-guide-prod"
+  }
+}
+
