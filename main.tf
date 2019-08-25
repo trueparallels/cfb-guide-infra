@@ -91,3 +91,50 @@ resource "aws_s3_bucket" "cfb-guide-prod-s3-bucket" {
   }
 }
 
+resource "aws_route53_zone" "cfb-guide-zone" {
+  name = "cfbtv.guide"
+}
+
+resource "aws_cloudfront_distribution" "distro" {
+  enabled = true
+  default_root_object = "index.html"
+
+  origin {
+    domain_name = "${aws_s3_bucket.cfb-guide-prod-s3-bucket.bucket_regional_domain_name}"
+    origin_id   = "cfb-guide-prod-s3-origin"
+
+    s3_origin_config {
+      origin_access_identity = "origin-access-identity/cloudfront/E2WUGTWGEWYPC0"
+    }
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = true
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  default_cache_behavior {
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "cfb-guide-prod-s3-origin"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    viewer_protocol_policy = "redirect-to-https"
+  }
+}
+
+resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
+  comment = "shrug"
+}
