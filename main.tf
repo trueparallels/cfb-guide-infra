@@ -108,9 +108,14 @@ resource "aws_cloudfront_distribution" "distro" {
     }
   }
 
+  aliases = ["cfbtv.guide"]
+
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = "${aws_acm_certificate.cfb-guide-cert.arn}"
+    ssl_support_method = "sni-only"
   }
+
+  price_class = "PriceClass_100"
 
   restrictions {
     geo_restriction {
@@ -137,4 +142,25 @@ resource "aws_cloudfront_distribution" "distro" {
 
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "shrug"
+}
+
+resource "aws_route53_record" "cfb-guide-domain-record" {
+  zone_id = "${aws_route53_zone.cfb-guide-zone.zone_id}"
+  name = "cfbtv.guide"
+  type = "A"
+
+  alias {
+    name = "${aws_cloudfront_distribution.distro.domain_name}"
+    zone_id = "${aws_cloudfront_distribution.distro.hosted_zone_id}"
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_acm_certificate" "cfb-guide-cert" {
+  domain_name = "cfbtv.guide"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
