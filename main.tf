@@ -100,11 +100,21 @@ resource "aws_cloudfront_distribution" "distro" {
   default_root_object = "index.html"
 
   origin {
-    domain_name = "${aws_s3_bucket.cfb-guide-prod-s3-bucket.bucket_regional_domain_name}"
+
+    domain_name = "cfb-guide-prod.s3-website-us-east-1.amazonaws.com"
     origin_id   = "cfb-guide-prod-s3-origin"
 
-    s3_origin_config {
-      origin_access_identity = "origin-access-identity/cloudfront/E2WUGTWGEWYPC0"
+    # s3_origin_config {
+    #   origin_access_identity = "origin-access-identity/cloudfront/E2WUGTWGEWYPC0"
+    # }
+
+    custom_origin_config {
+      http_port = 80
+      https_port = 443
+
+      origin_ssl_protocols = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+
+      origin_protocol_policy = "http-only"
     }
   }
 
