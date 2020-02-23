@@ -146,7 +146,13 @@ resource "aws_cloudfront_distribution" "distro" {
       }
     }
 
+    default_ttl = 3600
+
     viewer_protocol_policy = "redirect-to-https"
+  }
+
+  tags = {
+    Environment = "prod"
   }
 }
 
@@ -155,13 +161,13 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
 }
 
 resource "aws_route53_record" "cfb-guide-domain-record" {
-  zone_id = "${aws_route53_zone.cfb-guide-zone.zone_id}"
+  zone_id = "aws_route53_zone.cfb-guide-zone.zone_id"
   name = "cfbtv.guide"
   type = "A"
 
   alias {
-    name = "${aws_cloudfront_distribution.distro.domain_name}"
-    zone_id = "${aws_cloudfront_distribution.distro.hosted_zone_id}"
+    name = "aws_cloudfront_distribution.distro.domain_name"
+    zone_id = "aws_cloudfront_distribution.distro.hosted_zone_id"
     evaluate_target_health = false
   }
 }
