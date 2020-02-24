@@ -1,0 +1,25 @@
+[
+    {
+      "name": "cfb-guide-graphql-backend",
+      "image": "${image}:latest",
+      "essential": true,
+      "cpu": 256,
+      "memory": 512,
+      "networkMode": "awsvpc",
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "${log_group}",
+          "awslogs-region": "${log_region}",
+          "awslogs-stream-prefix": "app"
+        }
+      },
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ]
+    } 
+  ]

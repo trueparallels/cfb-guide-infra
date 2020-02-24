@@ -180,3 +180,14 @@ resource "aws_acm_certificate" "cfb-guide-cert" {
     create_before_destroy = true
   }
 }
+
+resource "aws_cloudwatch_log_group" "cfb-guide-graphql-logs" {
+  name = "CFBGuideGraphQL"
+}
+
+module "ecs" {
+  source = "./modules/ecs"
+
+  cloudwatch_log_group = aws_cloudwatch_log_group.cfb-guide-graphql-logs.name
+  cloudwatch_log_region = var.region
+}
