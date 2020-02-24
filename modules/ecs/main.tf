@@ -1,3 +1,7 @@
+locals {
+  task_path = "${path.module}/tasks/backend.json"
+}
+
 resource "aws_ecs_cluster" "cfb-guide-graphql-cluster" {
     name = "cfb-guide-graphql-cluster"
 }
@@ -19,7 +23,7 @@ resource "aws_ecs_task_definition" "cfb-guide-graphql-task" {
     family = "cfb-guide-graphql-family"
     requires_compatibilities = ["FARGATE"]
 
-    container_definitions = templatefile("${path.module}/tasks/backend.json", {
+    container_definitions = templatefile(local.task_path, {
       image = "${aws_ecr_repository.cfb-guide-ecr-repo.repository_url}"
       log_group = "${var.cloudwatch_log_group}"
       log_region = "${var.cloudwatch_log_region}"
