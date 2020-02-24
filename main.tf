@@ -23,6 +23,15 @@ resource "aws_vpc" "cfb-guide-vpc" {
   }
 }
 
+resource aws_subnet "cfb-guide-subnet-one" {
+  vpc_id = aws_vpc.cfb-guide-vpc.id
+  cidr_block = "172.33.0.0/20"
+
+  tags = {
+    Name = "cfb-guide-subnet-one"
+  }
+}
+
 resource "aws_dynamodb_table" "cfb-guide-prod-teams" {
   name = "cfb-guide-prod-teams"
   billing_mode = "PROVISIONED"
@@ -121,7 +130,7 @@ resource "aws_cloudfront_distribution" "distro" {
   aliases = ["cfbtv.guide"]
 
   viewer_certificate {
-    acm_certificate_arn = "${aws_acm_certificate.cfb-guide-cert.arn}"
+    acm_certificate_arn = aws_acm_certificate.cfb-guide-cert.arn
     ssl_support_method = "sni-only"
   }
 
@@ -161,13 +170,13 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
 }
 
 resource "aws_route53_record" "cfb-guide-domain-record" {
-  zone_id = "${aws_route53_zone.cfb-guide-zone.zone_id}"
+  zone_id = aws_route53_zone.cfb-guide-zone.zone_id
   name = "cfbtv.guide"
   type = "A"
 
   alias {
-    name = "${aws_cloudfront_distribution.distro.domain_name}"
-    zone_id = "${aws_cloudfront_distribution.distro.hosted_zone_id}"
+    name = aws_cloudfront_distribution.distro.domain_name
+    zone_id = aws_cloudfront_distribution.distro.hosted_zone_id
     evaluate_target_health = false
   }
 }
@@ -190,4 +199,5 @@ module "ecs" {
 
   cloudwatch_log_group = aws_cloudwatch_log_group.cfb-guide-graphql-logs.name
   cloudwatch_log_region = var.region
+  cfb-guide_subnet_id = aws_subnet.cfb-guide-subnet-one.id
 }

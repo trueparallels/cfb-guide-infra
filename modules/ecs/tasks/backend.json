@@ -1,6 +1,6 @@
 [
     {
-      "name": "cfb-guide-graphql-backend",
+      "name": "cfb-guide-graphql",
       "image": "${image}:latest",
       "essential": true,
       "cpu": 256,
