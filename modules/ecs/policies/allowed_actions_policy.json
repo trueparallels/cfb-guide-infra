@@ -10,7 +10,8 @@
           "ecr:BatchGetImage",
           "logs:CreateLogStream",
           "logs:PutLogEvents",
-          "dynamodb:GetItem"
+          "dynamodb:GetItem",
+          "dynamodb:Scan"
         ],
         "Resource": "*"
       }
