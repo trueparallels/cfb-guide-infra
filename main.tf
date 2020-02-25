@@ -141,6 +141,19 @@ resource "aws_s3_bucket" "cfb-guide-prod-s3-bucket" {
   }
 }
 
+resource "aws_s3_bucket" "cfb-guide-staging-s3-bucket" {
+  bucket = "cfb-guide-staging"
+  acl = "public-read"
+
+  website {
+    index_document = "index.html"
+  }
+
+  tags = {
+    Name = "cfb-guide-staging"
+  }
+}
+
 resource "aws_route53_zone" "cfb-guide-zone" {
   name = "cfbtv.guide"
 }
