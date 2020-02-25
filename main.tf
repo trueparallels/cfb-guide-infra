@@ -234,4 +234,5 @@ module "ecs" {
   cloudwatch_log_group = aws_cloudwatch_log_group.cfb-guide-graphql-logs.name
   cloudwatch_log_region = var.region
   cfb-guide_subnet_id = aws_subnet.cfb-guide-subnet-one.id
+  cfb-guide-security_group_id = aws_security_group.cfb-guide_allow-http-traffic.id
 }

@@ -17,7 +17,7 @@ resource "aws_ecs_service" "cfb-guide-graphql-service" {
 
   network_configuration {
     subnets = ["${var.cfb-guide_subnet_id}"]
-    security_groups = []
+    security_groups = ["${var.cfb-guide-security_group_id}"]
   }
 
   lifecycle {

@@ -9,3 +9,7 @@ variable "cloudwatch_log_region" {
 variable "cfb-guide_subnet_id" {
     type = string
 }
+
+variable "cfb-guide-security_group_id" {
+    type = string
+}
