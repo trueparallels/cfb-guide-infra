@@ -32,6 +32,40 @@ resource aws_subnet "cfb-guide-subnet-one" {
   }
 }
 
+resource "aws_security_group" "cfb-guide_allow-http-traffic" {
+  name = "cfb-guide_allow-http-traffic"
+  vpc_id = aws_vpc.cfb-guide-vpc.id
+  description = "Allow HTTP Traffic for CFBTV Guide"
+
+  ingress {
+    from_port = 80
+    to_port = 80
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol = "tcp"
+  }
+
+  ingress {
+    from_port = 443
+    to_port = 443
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol = "tcp"
+  }
+
+  ingress {
+    from_port   = 8
+    to_port     = 0
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol = "-1"
+  }
+}
+
 resource "aws_dynamodb_table" "cfb-guide-prod-teams" {
   name = "cfb-guide-prod-teams"
   billing_mode = "PROVISIONED"
