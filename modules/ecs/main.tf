@@ -19,6 +19,11 @@ resource "aws_ecs_service" "cfb-guide-graphql-service" {
     subnets = ["${var.cfb-guide_subnet_id}"]
     security_groups = []
   }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes = [task_definition]
+  }
 }
 
 resource aws_ecr_repository "cfb-guide-ecr-repo" {
