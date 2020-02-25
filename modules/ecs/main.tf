@@ -16,6 +16,7 @@ resource "aws_ecs_service" "cfb-guide-graphql-service" {
   task_definition = aws_ecs_task_definition.cfb-guide-graphql-task.arn
 
   network_configuration {
+    assign_public_ip = true
     subnets = ["${var.cfb-guide_subnet_id}"]
     security_groups = ["${var.cfb-guide-security_group_id}"]
   }
