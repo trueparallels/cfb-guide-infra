@@ -32,6 +32,16 @@ resource aws_subnet "cfb-guide-subnet-one" {
   }
 }
 
+resource aws_subnet "cfb-guide-subnet-two" {
+  vpc_id = aws_vpc.cfb-guide-vpc.id
+  cidr_block = "172.33.96.0/20"
+  availability_zone = "us-east-1d"
+
+  tags = {
+    Name = "cfb-guide-subnet-two"
+  }
+}
+
 resource "aws_security_group" "cfb-guide_allow-http-traffic" {
   name = "cfb-guide_allow-http-traffic"
   vpc_id = aws_vpc.cfb-guide-vpc.id
@@ -276,5 +286,7 @@ module "ecs" {
   cloudwatch_log_group = aws_cloudwatch_log_group.cfb-guide-graphql-logs.name
   cloudwatch_log_region = var.region
   cfb-guide_subnet_id = aws_subnet.cfb-guide-subnet-one.id
+  cfb-guide_subnet_two_id = aws_subnet.cfb-guide-subnet-two.id
   cfb-guide-security_group_id = aws_security_group.cfb-guide_allow-http-traffic.id
+  cfb-guide-vpc_id = aws_vpc.cfb-guide-vpc.id
 }

@@ -22,8 +22,14 @@ resource "aws_ecs_service" "cfb-guide-graphql-service" {
   }
 
   lifecycle {
-    create_before_destroy = true
+    # create_before_destroy = true
     ignore_changes = [task_definition]
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.cfb-guide-graphql-lb-target-group.arn
+    container_name = "cfb-guide-graphql"
+    container_port = 3003
   }
 }
 
@@ -62,4 +68,34 @@ resource "aws_ecs_task_definition" "cfb-guide-graphql-task" {
   
   execution_role_arn = aws_iam_role.cfb-guide-ecs_task_execution_role.arn
   task_role_arn = aws_iam_role.cfb-guide-ecs_task_execution_role.arn
+}
+
+resource aws_alb "cfb-guide-graphql-alb" {
+  name = "cfb-guide-graphql-alb"
+  security_groups = [var.cfb-guide-security_group_id]
+
+  subnets = [var.cfb-guide_subnet_id, var.cfb-guide_subnet_two_id]
+}
+
+resource aws_lb_target_group "cfb-guide-graphql-lb-target-group" {
+  name = "cfb-guide-graphql-lb-target"
+  port = 3003
+  protocol = "HTTP"
+  vpc_id = var.cfb-guide-vpc_id
+  target_type = "ip"
+
+  health_check {
+    path = "/ok"
+  }
+}
+
+resource aws_lb_listener "cfb-guide-graphql-alb-listener" {
+  load_balancer_arn = aws_alb.cfb-guide-graphql-alb.arn
+  port = 80
+  protocol = "HTTP"
+
+  default_action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.cfb-guide-graphql-lb-target-group.arn
+  }
 }
