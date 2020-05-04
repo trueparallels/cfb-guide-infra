@@ -29,7 +29,7 @@ resource "aws_ecs_service" "cfb-guide-graphql-service" {
   load_balancer {
     target_group_arn = aws_lb_target_group.cfb-guide-graphql-lb-target-group.arn
     container_name = "cfb-guide-graphql"
-    container_port = 3003
+    container_port = 80
   }
 }
 
@@ -79,13 +79,15 @@ resource aws_alb "cfb-guide-graphql-alb" {
 
 resource aws_lb_target_group "cfb-guide-graphql-lb-target-group" {
   name = "cfb-guide-graphql-lb-target"
-  port = 3003
+  port = 80
   protocol = "HTTP"
   vpc_id = var.cfb-guide-vpc_id
   target_type = "ip"
 
   health_check {
     path = "/ok"
+    interval = 60
+    timeout = 30
   }
 }
 

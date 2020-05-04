@@ -280,6 +280,11 @@ resource aws_route_table_association "cfb-guide-route-table-assoc" {
   route_table_id = aws_route_table.cfb-guide-route-table.id
 }
 
+resource aws_route_table_association "cfb-guide-route-table-assoc-two" {
+  subnet_id = aws_subnet.cfb-guide-subnet-two.id
+  route_table_id = aws_route_table.cfb-guide-route-table.id
+}
+
 module "ecs" {
   source = "./modules/ecs"
 
